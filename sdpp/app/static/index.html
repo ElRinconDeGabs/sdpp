@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/static/css/styles.css" />
+    <title>SDPP - Login</title>
+  </head>
+  <body>
+    <section id="login">
+      <div class="container">
+        <h2>Login</h2>
+
+        <form id="login-form">
+          <div class="form-floating">
+            <input
+              type="text"
+              id="username"
+              name="username"
+              placeholder=" "
+              required
+            />
+            <label for="username">Usuario</label>
+            <span class="bar"></span>
+            <span class="highlight"></span>
+          </div>
+
+          <div class="form-floating">
+            <input
+              type="password"
+              id="pass"
+              name="pass"
+              placeholder=" "
+              required
+            />
+            <label for="pass">Contraseña</label>
+            <span class="bar"></span>
+            <span class="highlight"></span>
+          </div>
+
+          <div id="message">
+            <p id="msg-mistake"></p>
+          </div>
+
+          <button type="submit" id="submit">Login</button>
+        </form>
+
+        <div id="sing-up">
+          <span>¿Nuevo en SDPP?</span>
+          <a href="sign-up.html">Crea tu cuenta</a>
+        </div>
+      </div>
+    </section>
+
+    <script defer src="/static/js/login.js"></script>
+  </body>
+</html>
