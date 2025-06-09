@@ -1,13 +1,32 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>sing-up</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Registro de Usuario</title>
 </head>
 <body>
-    <p>
-        register page
-    </p>
+  <h2>Formulario de Registro</h2>
+  <form id="registroForm">
+    <label>Nombre completo:</label><br/>
+    <input type="text" name="nombre" required /><br/><br/>
+
+    <label>Correo electrónico:</label><br/>
+    <input type="email" name="correo" required /><br/><br/>
+
+    <label>Contraseña:</label><br/>
+    <input type="password" name="contraseña" required /><br/><br/>
+
+    <label>Rol:</label><br/>
+    <select name="rol" required>
+      <option value="estudiante">Estudiante</option>
+      <option value="tutor_academico">Tutor Académico</option>
+      <option value="tutor_empresarial">Tutor Empresarial</option>
+    </select><br/><br/>
+
+    <button type="submit">Registrarse</button>
+  </form>
+
+  <script defer src="/static/js/sign-up.js"></script>
 </body>
 </html>
