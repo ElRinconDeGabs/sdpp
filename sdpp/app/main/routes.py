@@ -11,3 +11,7 @@ def home():
 @main_bp.route('/sign-up.html')
 def sign_up_page():
     return send_from_directory('static', 'sign-up.html')
+
+@main_bp.route('/estudiante/dashboard')
+def estudiante_dashboard():
+    return send_from_directory('static', 'e_dashboard.html')
