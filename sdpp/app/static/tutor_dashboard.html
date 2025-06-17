@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Panel Tutor Empresarial</title>
+  <link rel="stylesheet" href="/static/css/tutor_dashboard.css" />
+</head>
+<body>
+  <div class="sidebar">
+    <h2>Panel Tutor</h2>
+    <ul>
+      <li><a href="#inicio">Inicio</a></li>
+      <li><a href="#actividades">Actividades por Validar</a></li>
+      <li><a href="#" id="logoutBtn">Cerrar Sesión</a></li>
+    </ul>
+  </div>
+
+  <div class="main">
+    <section id="inicio">
+      <h1 id="nombreTutor">Bienvenido, Tutor</h1>
+      <p>En este panel puedes revisar y validar las actividades registradas por tus estudiantes asignados.</p>
+    </section>
+
+    <section id="actividades">
+      <h2>Actividades Pendientes de Validación</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Estudiante</th>
+            <th>Fecha</th>
+            <th>Descripción</th>
+            <th>Horas</th>
+            <th>Evidencia</th>
+            <th>Validar</th>
+          </tr>
+        </thead>
+        <tbody id="tablaActividades">
+          <!-- Se llenará con JavaScript -->
+        </tbody>
+      </table>
+    </section>
+  </div>
+
+  <script src="/static/js/tutor_dashboard.js"></script>
+</body>
+</html>
