@@ -15,3 +15,7 @@ def sign_up_page():
 @main_bp.route('/estudiante/dashboard')
 def estudiante_dashboard():
     return send_from_directory('static', 'e_dashboard.html')
+
+@main_bp.route('/tutor_academico/dashboard')
+def tutor_academico_dashboard():
+    return send_from_directory('static', 'tutor_academico_dashboard.html')

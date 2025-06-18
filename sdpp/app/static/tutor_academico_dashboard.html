@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Panel Tutor Académico</title>
+  <link rel="stylesheet" href="/static/css/tutor_dashboard.css">
+</head>
+<body>
+  <div class="sidebar">
+    <h2>Panel Tutor Académico</h2>
+    <ul>
+      <li><a href="#inicio">Inicio</a></li>
+      <li><a href="#asignacion">Asignar Tutor Empresarial</a></li>
+      <li><a href="#actividades">Actividades Estudiantes</a></li>
+      <li><a href="#" id="logoutBtn">Cerrar Sesión</a></li>
+    </ul>
+  </div>
+
+  <div class="main">
+    <!-- Inicio -->
+    <section id="inicio">
+      <h1 id="nombreTutorAcademico">Bienvenido, Tutor Académico</h1>
+      <p>En este panel puedes asignar tutores empresariales a tus estudiantes y revisar sus actividades registradas.</p>
+    </section>
+
+    <!-- Asignación de Tutor Empresarial -->
+    <section id="asignacion">
+      <h2>Asignar Tutor Empresarial</h2>
+      <form id="formAsignacion">
+        <label for="estudiante">Estudiante:</label>
+        <select id="estudiante" required></select>
+
+        <label for="tutorEmpresarial">Tutor Empresarial:</label>
+        <select id="tutorEmpresarial" required></select>
+
+        <button type="submit">Asignar</button>
+      </form>
+      <p id="asignacionMensaje"></p>
+    </section>
+
+    <!-- Actividades de Estudiantes -->
+    <section id="actividades">
+      <h2>Actividades Registradas</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Estudiante</th>
+            <th>Fecha</th>
+            <th>Descripción</th>
+            <th>Horas</th>
+            <th>Estado</th>
+            <th>Comentarios</th>
+          </tr>
+        </thead>
+        <tbody id="tablaActividadesEstudiantes">
+          <!-- Se llenará con JS -->
+        </tbody>
+      </table>
+    </section>
+  </div>
+
+  <script src="/static/js/tutor_academico_dashboard.js"></script>
+</body>
+</html>

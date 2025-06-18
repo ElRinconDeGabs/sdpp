@@ -29,8 +29,8 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
         case 'estudiante':
           window.location.href = '/estudiante/dashboard';
           break;
-        case 'tutror_academico':
-          window.location.href = '/tutror_academico/dashboard';
+        case 'tutor_academico':
+          window.location.href = '/tutor_academico/dashboard';
           break;
         case 'tutor_empresarial':
           window.location.href = '/tutor_empresarial/dashboard';
