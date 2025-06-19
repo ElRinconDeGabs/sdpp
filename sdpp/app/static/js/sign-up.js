@@ -1,20 +1,41 @@
-document.getElementById('registroForm').addEventListener('submit', async function (e) {
-  e.preventDefault();
+document.addEventListener('DOMContentLoaded', () => {
+  const form = document.getElementById('registroForm');
 
-  const formData = new FormData(e.target);
-  const data = Object.fromEntries(formData.entries());
+  let mensajeElem = document.createElement('div');
+  mensajeElem.id = 'mensajeRegistro';
+  mensajeElem.style.marginTop = '10px';
+  mensajeElem.style.fontWeight = 'bold';
+  form.insertAdjacentElement('afterend', mensajeElem);
 
-  try {
-    const res = await fetch('/api/auth/sign-up', { // ← Cambia la ruta aquí
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
-    });
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    mensajeElem.style.color = 'black';
+    mensajeElem.textContent = 'Procesando registro...';
 
-    const result = await res.json();
-    alert(result.message || (result.success ? 'Registrado con éxito' : 'Error al registrar'));
-  } catch (err) {
-    alert('Error al conectar con el servidor');
-    console.error(err);
-  }
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData.entries());
+
+    try {
+      const res = await fetch('/api/auth/sign-up', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+
+      const result = await res.json();
+
+      if (res.ok && result.success) {
+        mensajeElem.style.color = 'green';
+        mensajeElem.textContent = result.message || 'Registrado con éxito';
+        form.reset();
+      } else {
+        mensajeElem.style.color = 'red';
+        mensajeElem.textContent = result.message || 'Error al registrar';
+      }
+    } catch (err) {
+      mensajeElem.style.color = 'red';
+      mensajeElem.textContent = 'Error al conectar con el servidor';
+      console.error(err);
+    }
+  });
 });

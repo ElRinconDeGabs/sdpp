@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Panel Tutor Académico</title>
-  <link rel="stylesheet" href="/static/css/tutor_dashboard.css">
+  <link rel="stylesheet" href="/static/css/tutor_dashboard.css" />
 </head>
 <body>
   <div class="sidebar">
@@ -27,15 +27,29 @@
     <section id="asignacion">
       <h2>Asignar Tutor Empresarial</h2>
       <form id="formAsignacion">
-        <label for="estudiante">Estudiante:</label>
-        <select id="estudiante" required></select>
+        <label for="selectEstudiante">Estudiante:</label>
+        <select id="selectEstudiante" name="estudiante" required></select>
 
-        <label for="tutorEmpresarial">Tutor Empresarial:</label>
-        <select id="tutorEmpresarial" required></select>
+        <label for="selectTutorEmpresarial">Tutor Empresarial:</label>
+        <select id="selectTutorEmpresarial" name="tutorEmpresarial" required></select>
 
-        <button type="submit">Asignar</button>
+        <button type="submit" id="btnAsignarTutor">Asignar</button>
       </form>
-      <p id="asignacionMensaje"></p>
+      <p id="asignacionMensaje" aria-live="polite"></p>
+
+      <!-- Tabla de asignaciones -->
+      <h3>Estudiantes con tutor empresarial asignado</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Estudiante</th>
+            <th>Tutor Empresarial</th>
+          </tr>
+        </thead>
+        <tbody id="tablaAsignacion">
+          <!-- Filas se llenan dinámicamente desde JS -->
+        </tbody>
+      </table>
     </section>
 
     <!-- Actividades de Estudiantes -->
@@ -45,6 +59,7 @@
         <thead>
           <tr>
             <th>Estudiante</th>
+            <th>Tutor Empresarial</th>
             <th>Fecha</th>
             <th>Descripción</th>
             <th>Horas</th>
@@ -53,7 +68,7 @@
           </tr>
         </thead>
         <tbody id="tablaActividadesEstudiantes">
-          <!-- Se llenará con JS -->
+          <!-- Aquí se llenará con JS -->
         </tbody>
       </table>
     </section>

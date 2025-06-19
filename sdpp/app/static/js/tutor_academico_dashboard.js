@@ -1,117 +1,185 @@
-// Cargar nombre del tutor académico
-async function cargarNombreTutorAcademico() {
+// Variables globales
+let estudiantesConTutores = [];
+let tutoresDisponibles = [];
+let cedulaAcademico = null;
+
+// Obtener info del usuario actual
+async function obtenerUsuario() {
   try {
-    const response = await fetch('/auth/tutor-academico/usuario');
-    if (!response.ok) throw new Error('Error HTTP al obtener tutor académico');
-    const data = await response.json();
-    if (data.success && data.nombre) {
+    const res = await fetch('/api/auth/usuario');
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    if (data.success) {
       document.getElementById('nombreTutorAcademico').textContent = `Bienvenido, ${data.nombre}`;
+      cedulaAcademico = data.cedula || null;
     }
-  } catch (error) {
-    console.error('❌ Error al obtener nombre del tutor académico:', error);
+  } catch (err) {
+    console.error('Error al obtener usuario:', err);
   }
 }
 
-// Cargar lista de estudiantes para el formulario
-async function cargarEstudiantes() {
+// Cargar estudiantes con tutores asignados
+async function cargarEstudiantesConTutores() {
   try {
-    const response = await fetch('/auth/tutor-academico/estudiantes');
-    const data = await response.json();
-    const select = document.getElementById('estudiante');
-    select.innerHTML = '';
+    const res = await fetch('/api/auth/estudiantes-con-tutores');
+    if (!res.ok) throw new Error(`Error HTTP: ${res.status}`);
+    const data = await res.json();
+    if (!data.success) throw new Error(data.message);
+
+    estudiantesConTutores = data.estudiantes;
+
+    const tabla = document.getElementById('tablaAsignacion');
+    tabla.innerHTML = '';
+
+    estudiantesConTutores.forEach(est => {
+      const fila = document.createElement('tr');
+      fila.innerHTML = `
+        <td>${est.nombre_estudiante || 'Nombre no disponible'}</td>
+        <td>${est.tutor_empresarial || 'Sin asignar'}</td>
+      `;
+      tabla.appendChild(fila);
+    });
+  } catch (err) {
+    console.error('❌ Error al cargar estudiantes con tutores:', err);
+    alert('Ocurrió un error al cargar estudiantes.');
+  }
+}
+
+// Cargar tutores empresariales
+async function cargarTutores() {
+  try {
+    const res = await fetch('/api/auth/tutores-empresariales');
+    if (!res.ok) throw new Error(`Error HTTP: ${res.status}`);
+    const data = await res.json();
+    if (!data.success) throw new Error(data.message);
+
+    tutoresDisponibles = data.tutores;
+
+    const select = document.getElementById('selectTutorEmpresarial');
+    select.innerHTML = `<option value="">-- Selecciona un tutor empresarial --</option>`;
+
+    data.tutores.forEach(t => {
+      const opt = document.createElement('option');
+      opt.value = t.cedula || t.id_usuario;
+      opt.textContent = t.nombre || 'Sin nombre';
+      select.appendChild(opt);
+    });
+  } catch (err) {
+    console.error('❌ Error al cargar tutores:', err);
+    alert('No se pudieron cargar los tutores.');
+  }
+}
+
+// Cargar estudiantes para asignar
+async function cargarEstudiantesParaAsignar() {
+  try {
+    const res = await fetch('/api/auth/estudiantes-con-tutores');
+    if (!res.ok) throw new Error(`Error HTTP: ${res.status}`);
+    const data = await res.json();
+    if (!data.success) throw new Error(data.message);
+
+    const select = document.getElementById('selectEstudiante');
+    select.innerHTML = `<option value="">-- Selecciona un estudiante --</option>`;
 
     data.estudiantes.forEach(est => {
-      const option = document.createElement('option');
-      option.value = est.id;
-      option.textContent = est.nombre;
-      select.appendChild(option);
+      const opt = document.createElement('option');
+      opt.value = est.cedula || est.id_estudiante;
+      opt.textContent = est.nombre_estudiante || 'Sin nombre';
+      select.appendChild(opt);
     });
-  } catch (error) {
-    console.error('❌ Error al cargar estudiantes:', error);
+  } catch (err) {
+    console.error('❌ Error al cargar estudiantes:', err);
+    alert('No se pudieron cargar los estudiantes.');
   }
 }
 
-// Cargar lista de tutores empresariales para el formulario
-async function cargarTutoresEmpresariales() {
-  try {
-    const response = await fetch('/auth/tutor-academico/tutores-empresariales');
-    const data = await response.json();
-    const select = document.getElementById('tutorEmpresarial');
-    select.innerHTML = '';
+// Asignar tutor
+async function asignarTutor() {
+  const cedulaEst = document.getElementById('selectEstudiante')?.value;
+  const cedulaTut = document.getElementById('selectTutorEmpresarial')?.value;
 
-    data.tutores.forEach(tutor => {
-      const option = document.createElement('option');
-      option.value = tutor.id;
-      option.textContent = tutor.nombre;
-      select.appendChild(option);
-    });
-  } catch (error) {
-    console.error('❌ Error al cargar tutores empresariales:', error);
+  if (!cedulaEst || !cedulaTut || !cedulaAcademico) {
+    alert('Faltan datos para realizar la asignación.');
+    return;
   }
-}
-
-// Manejar envío del formulario de asignación
-document.getElementById('formAsignacion').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const estudianteId = document.getElementById('estudiante').value;
-  const tutorId = document.getElementById('tutorEmpresarial').value;
 
   try {
-    const response = await fetch('/auth/tutor-academico/asignar-tutor', {
+    const res = await fetch('/api/auth/asignar-tutor', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        id_estudiante: estudianteId,
-        id_tutor_empresarial: tutorId
+        cedula_empresarial: cedulaTut,
+        cedula_estudiante: cedulaEst,
+        fecha_asignacion: new Date().toISOString().split('T')[0]
       })
     });
 
-    const data = await response.json();
-    const mensaje = document.getElementById('asignacionMensaje');
+    const data = await res.json();
     if (data.success) {
-      mensaje.textContent = '✅ Tutor asignado correctamente';
-      mensaje.style.color = 'green';
+      alert('✅ Tutor asignado correctamente');
+      await cargarEstudiantesConTutores();
+      await cargarEstudiantesParaAsignar();
+      await cargarActividadesEstudiantes();
     } else {
-      mensaje.textContent = '❌ Error al asignar tutor';
-      mensaje.style.color = 'red';
+      alert('❌ Error al asignar tutor: ' + (data.message || 'desconocido'));
     }
-  } catch (error) {
-    console.error('❌ Error al enviar asignación:', error);
+  } catch (err) {
+    console.error('❌ Error en la asignación:', err);
+    alert('Error al asignar tutor.');
   }
-});
+}
 
-// Cargar actividades de los estudiantes
+// Cargar actividades de todos los estudiantes
 async function cargarActividadesEstudiantes() {
   try {
-    const response = await fetch('/auth/tutor-academico/actividades');
-    const data = await response.json();
+    const res = await fetch('/api/auth/actividades-estudiantes');
+    if (!res.ok) throw new Error(`Error HTTP: ${res.status}`);
+    const data = await res.json();
+    if (!data.success) throw new Error(data.message);
+
     const tabla = document.getElementById('tablaActividadesEstudiantes');
     tabla.innerHTML = '';
 
     data.actividades.forEach(act => {
       const fila = document.createElement('tr');
       fila.innerHTML = `
-        <td>${act.nombre_estudiante}</td>
-        <td>${act.fecha}</td>
-        <td>${act.descripcion}</td>
-        <td>${act.horas}</td>
-        <td>${act.estado_validacion}</td>
-        <td>${act.comentario || ''}</td>
+        <td>${act.estudiante || ''}</td>
+        <td>${act.tutor_empresarial || ''}</td>
+        <td>${act.fecha || ''}</td>
+        <td>${act.descripcion || ''}</td>
+        <td>${act.horas || ''}</td>
+        <td>${act.estado_validacion || ''}</td>
+        <td>${act.comentarios || ''}</td>
       `;
       tabla.appendChild(fila);
     });
-  } catch (error) {
-    console.error('❌ Error al cargar actividades de estudiantes:', error);
+  } catch (err) {
+    console.error('Error al cargar actividades:', err);
   }
 }
 
-// Función principal
-async function cargarDashboardTutorAcademico() {
-  await cargarNombreTutorAcademico();
-  await cargarEstudiantes();
-  await cargarTutoresEmpresariales();
-  await cargarActividadesEstudiantes();
+// Logout
+function logout() {
+  fetch('/api/auth/logout', { method: 'POST' })
+    .then(() => window.location.href = '/')
+    .catch(err => console.error('Error al cerrar sesión:', err));
 }
 
-// Ejecutar al cargar el DOM
-document.addEventListener('DOMContentLoaded', cargarDashboardTutorAcademico);
+// Inicialización
+document.addEventListener('DOMContentLoaded', () => {
+  obtenerUsuario();
+  cargarEstudiantesConTutores();
+  cargarTutores();
+  cargarEstudiantesParaAsignar();
+  cargarActividadesEstudiantes();
+
+  document.getElementById('btnAsignarTutor')?.addEventListener('click', (e) => {
+    e.preventDefault();
+    asignarTutor();
+  });
+
+  document.getElementById('logoutBtn')?.addEventListener('click', (e) => {
+    e.preventDefault();
+    logout();
+  });
+});

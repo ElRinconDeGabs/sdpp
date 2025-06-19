@@ -1,3 +1,4 @@
+// Cargar nombre del estudiante
 async function cargarNombreEstudiante() {
   try {
     const response = await fetch('/api/auth/usuario');
@@ -13,6 +14,7 @@ async function cargarNombreEstudiante() {
   }
 }
 
+// Cargar actividades registradas por el estudiante
 async function cargarActividadesEstudiante() {
   try {
     const response = await fetch('/api/auth/actividades/mias');
@@ -28,7 +30,7 @@ async function cargarActividadesEstudiante() {
           <td>${actividad.descripcion}</td>
           <td>${actividad.horas}</td>
           <td>${actividad.estado_validacion || 'Pendiente'}</td>
-          <td>${actividad.comentarios}</td>
+          <td>${actividad.comentarios || ''}</td>
         `;
         tabla.appendChild(fila);
       });
@@ -40,6 +42,24 @@ async function cargarActividadesEstudiante() {
   }
 }
 
+// Cargar resumen (avance y horas semanales)
+async function cargarResumen() {
+  try {
+    const response = await fetch('/api/auth/actividades/resumen');
+    if (!response.ok) throw new Error('Error HTTP al obtener resumen');
+    const data = await response.json();
+    if (data.success) {
+      document.getElementById('avanceGeneral').textContent = `${data.porcentaje}% completado`;
+      document.getElementById('horasSemana').textContent = `${data.horas_semana} horas`;
+    } else {
+      console.error('No autorizado o sin sesión');
+    }
+  } catch (error) {
+    console.error('❌ Error al cargar resumen:', error);
+  }
+}
+
+// Enviar formulario de nueva actividad
 document.getElementById('actividadForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   const formData = new FormData(e.target);
@@ -53,6 +73,7 @@ document.getElementById('actividadForm').addEventListener('submit', async (e) =>
       alert('Actividad registrada con éxito.');
       e.target.reset();
       await cargarActividadesEstudiante();
+      await cargarResumen();
     } else {
       alert('Error al registrar actividad.');
     }
@@ -61,7 +82,9 @@ document.getElementById('actividadForm').addEventListener('submit', async (e) =>
   }
 });
 
+// Al cargar la página
 document.addEventListener('DOMContentLoaded', async () => {
   await cargarNombreEstudiante();
   await cargarActividadesEstudiante();
+  await cargarResumen();
 });

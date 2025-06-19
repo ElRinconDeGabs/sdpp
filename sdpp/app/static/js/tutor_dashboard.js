@@ -1,7 +1,7 @@
 // Función para cargar el nombre del tutor desde el backend
 async function cargarNombreTutor() {
   try {
-    const response = await fetch('/api/auth/tutor/usuario')  // en lugar de /auth/tutor/usuario
+    const response = await fetch('/api/auth/usuario')  // en lugar de /auth/tutor/usuario
     if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
 
     const data = await response.json();
@@ -24,7 +24,7 @@ async function cargarNombreTutor() {
 // Función para cargar actividades pendientes
 async function cargarActividadesPendientes() {
   try {
-    const response = await fetch('/api/auth/tutor/usuario')  // en lugar de /auth/tutor/usuario
+    const response = await fetch('/api/auth/usuario')  // en lugar de /auth/tutor/usuario
     if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
 
     const data = await response.json();
