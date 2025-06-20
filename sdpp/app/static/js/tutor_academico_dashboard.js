@@ -149,7 +149,7 @@ async function cargarActividadesEstudiantes() {
         <td>${act.descripcion || ''}</td>
         <td>${act.horas || ''}</td>
         <td>${act.estado_validacion || ''}</td>
-        <td>${act.comentarios || ''}</td>
+        <td>${act.comentario || ''}</td>
       `;
       tabla.appendChild(fila);
     });

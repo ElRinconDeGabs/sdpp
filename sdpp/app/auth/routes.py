@@ -4,6 +4,7 @@ from werkzeug.utils import secure_filename
 import mysql.connector
 import os
 from datetime import datetime, timedelta
+from functools import wraps
 
 # Blueprint con prefijo para API de autenticación
 auth_bp = Blueprint('auth', __name__, url_prefix='/api/auth')
@@ -381,8 +382,6 @@ def actividades_estudiantes():
         for result in cursor.stored_results():
             actividades = result.fetchall()
 
-        print("Datos actividades:", actividades)  # <-- Agrega este print para debug
-
         return jsonify({'success': True, 'actividades': actividades})
 
     except Exception as e:
@@ -393,3 +392,66 @@ def actividades_estudiantes():
         if cursor: cursor.close()
         if conn: conn.close()
 
+# ---------- ACTIVIDADES PENDIENTES POR VALIDAR (TUTOR EMPRESARIAL) ----------
+@auth_bp.route('/actividades-por-validar', methods=['GET'])
+def actividades_por_validar():
+    print("SESSION:", dict(session))  # para depurar
+    if 'user_id' not in session or session.get('rol') != 'tutor_empresarial':
+        return jsonify({'success': False, 'message': 'No autorizado'}), 401
+
+    try:
+        conn = mysql.connector.connect(**DB_CONFIG)
+        cursor = conn.cursor(dictionary=True)
+
+        cursor.callproc('sp_listar_actividades_por_validar', [session['user_id']])
+
+        actividades = []
+        for result in cursor.stored_results():
+            actividades = result.fetchall()
+
+        return jsonify({'success': True, 'actividades': actividades})
+
+    except Exception as e:
+        print("❌ ERROR en actividades_por_validar:", e)
+        return jsonify({'success': False, 'message': 'Error del servidor'}), 500
+
+    finally:
+        if cursor: cursor.close()
+        if conn: conn.close()
+
+
+# ---------- VALIDAR ACTIVIDAD (TUTOR EMPRESARIAL) ----------
+@auth_bp.route('/validar-actividad', methods=['POST'])
+def validar_actividad():
+    if 'user_id' not in session or session.get('rol') != 'tutor_empresarial':
+        return jsonify({'success': False, 'message': 'No autorizado'}), 401
+
+    try:
+        data = request.get_json()
+        id_actividad = data.get('id_actividad')
+        estado = data.get('estado')
+        comentario = data.get('comentario', '')
+
+        if not id_actividad or estado not in ['aprobada', 'rechazada']:
+            return jsonify({'success': False, 'message': 'Datos inválidos'}), 400
+
+        conn = mysql.connector.connect(**DB_CONFIG)
+        cursor = conn.cursor()
+
+        cursor.callproc('sp_validar_actividad', [
+            id_actividad,
+            session['user_id'],
+            estado,
+            comentario
+        ])
+
+        conn.commit()
+        return jsonify({'success': True, 'message': 'Actividad validada correctamente'})
+
+    except Exception as e:
+        print("❌ ERROR en validar_actividad:", e)
+        return jsonify({'success': False, 'message': 'Error del servidor'}), 500
+
+    finally:
+        if cursor: cursor.close()
+        if conn: conn.close()

@@ -1,3 +1,4 @@
+/* Reset y fuente base */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -5,21 +6,28 @@
   font-family: Arial, sans-serif;
 }
 
+/* Estructura general */
 body {
   display: flex;
   min-height: 100vh;
   background-color: #f4f6f8;
 }
 
+/* Sidebar */
 .sidebar {
-  width: 220px;
+  width: 240px;
   background-color: #2c3e50;
   color: white;
-  padding: 20px;
+  padding: 30px 25px;
+  display: flex;
+  flex-direction: column;
 }
 
 .sidebar h2 {
-  margin-bottom: 20px;
+  padding-bottom: 30px;
+  font-weight: 700;
+  font-size: 1.6rem;
+  color: #ecf0f1;
 }
 
 .sidebar ul {
@@ -27,31 +35,78 @@ body {
 }
 
 .sidebar ul li {
-  margin: 15px 0;
+  margin: 20px 0;
 }
 
 .sidebar ul li a {
   color: white;
   text-decoration: none;
-  font-weight: bold;
+  font-weight: 600;
+  font-size: 1.1rem;
+  padding: 10px 15px;
+  display: block;
+  border-radius: 6px;
+  transition: background-color 0.3s ease;
 }
 
+.sidebar ul li a:hover {
+  background-color: #34495e;
+}
+
+#logoutBtn {
+  margin-top: 30px;
+  background-color: #e74c3c;
+  padding: 12px 15px;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 1.1rem;
+  text-align: center;
+  cursor: pointer;
+  color: white;
+  border: none;
+  transition: background-color 0.3s ease;
+  display: inline-block;
+  width: 100%;
+}
+
+#logoutBtn:hover {
+  background-color: #c0392b;
+}
+
+/* Contenido principal */
 .main {
   flex: 1;
-  padding: 30px;
+  padding: 40px 50px;
+  overflow-y: auto;
 }
 
-h1, h2 {
-  margin-bottom: 20px;
+/* Títulos principales del dashboard */
+.main h1,
+.main h2 {
+  padding-top: 20px;
+  margin-bottom: 5px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #2c3e50;
 }
 
+/* Párrafos y texto explicativo */
+.main p {
+  margin-bottom: 25px;
+  font-size: 1rem;
+  color: #555;
+}
+
+/* Tabla de actividades */
 table {
   width: 100%;
   background: white;
   border-collapse: collapse;
-  border-radius: 10px;
+  border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  font-size: 1rem;
+  color: #34495e;
 }
 
 table thead {
@@ -61,35 +116,85 @@ table thead {
 
 table th,
 table td {
-  padding: 12px;
+  padding: 15px 18px;
   text-align: left;
   border-bottom: 1px solid #ddd;
   vertical-align: middle;
 }
 
-button,
-a.btn {
+/* Botones de acciones */
+button {
   background-color: #3498db;
   color: white;
   border: none;
   cursor: pointer;
-  padding: 6px 12px;
-  border-radius: 4px;
-  text-decoration: none;
-  font-size: 14px;
+  padding: 10px 16px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: background-color 0.3s ease;
+  margin-right: 8px;
 }
 
-button:hover,
-a.btn:hover {
+button:hover {
   background-color: #2980b9;
 }
 
-select {
-  padding: 5px;
-  border-radius: 4px;
-  border: 1px solid #ccc;
+/* Textarea para comentarios */
+textarea.comentario {
+  width: 100%;
+  resize: vertical;
+  padding: 10px;
+  font-size: 0.95rem;
+  border-radius: 6px;
+  border: 1.5px solid #ccc;
+  transition: border-color 0.3s ease;
 }
 
-td select {
-  width: 120px;
+textarea.comentario:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 6px #3498dbaa;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  body {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+  }
+
+  .sidebar ul {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+  }
+
+  .sidebar h2 {
+    font-size: 1.3rem;
+    padding-bottom: 0;
+  }
+
+  .main {
+    padding: 20px;
+  }
+
+  table th,
+  table td {
+    font-size: 0.9rem;
+    padding: 10px;
+  }
+
+  button {
+    padding: 8px 12px;
+    font-size: 0.9rem;
+  }
 }

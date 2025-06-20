@@ -82,9 +82,27 @@ document.getElementById('actividadForm').addEventListener('submit', async (e) =>
   }
 });
 
-// Al cargar la página
-document.addEventListener('DOMContentLoaded', async () => {
-  await cargarNombreEstudiante();
-  await cargarActividadesEstudiante();
-  await cargarResumen();
+// Cerrar sesión
+function logout() {
+  fetch('/api/auth/logout', { method: 'POST' })
+    .then(() => window.location.href = '/')
+    .catch(err => {
+      console.error('Error al cerrar sesión:', err);
+      alert('No fue posible cerrar sesión en este momento. Inténtalo más tarde.');
+    });
+}
+
+// Inicialización
+document.addEventListener('DOMContentLoaded', () => {
+  cargarNombreEstudiante();
+  cargarActividadesEstudiante();
+  cargarResumen();
+
+  const logoutBtn = document.getElementById('logoutBtn');
+  if (logoutBtn) {
+    logoutBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      logout();
+    });
+  }
 });
