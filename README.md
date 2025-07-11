@@ -25,16 +25,37 @@ Este proyecto corresponde a una tesina teórico-práctica para la Universidad Te
 
 ## 🚀 Instalación y ejecución local
 
-1. **Clona el repositorio**
+Sigue estos pasos para ejecutar el proyecto localmente en cualquier sistema operativo:
 
-```bash
+### 1. Clona el repositorio
+
+
+```
+bash
+# 1. Clonar el repositorio
 git clone https://github.com/ElRinconDeGabs/sdpp.git
 cd sdpp
+
+# 2. Crear entorno virtual
 python -m venv venv
-source venv/bin/activate     # En Windows: venv\Scripts\activate
+
+# 3. Activar entorno virtual (PowerShell)
+.\venv\Scripts\Activate.ps1
+
+# ⚠️ Si ves un error sobre ejecución de scripts:
+# Ejecuta esto una sola vez para permitirlo:
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+
+venv\Scripts\activate.bat "En Windows CMD"
+source venv/bin/activate  "En macOS / Linux"
+
+# 4. Instalar dependencias
 pip install -r requirements.txt
+
+# 5. Ejecutar la aplicación
 python run.py
 ```
+
 🧑‍💻 Autores
 - Isaac Samaniego
 - Ambar Hernández
